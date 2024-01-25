@@ -1,9 +1,5 @@
 class Key {
-  private signature: number;
-
-  constructor() {
-    this.signature = Math.random();
-  }
+  private signature: number = Math.random();
 
   getSignature(): number {
     return this.signature;
@@ -14,7 +10,7 @@ class Person {
   private key: Key;
 
   constructor(key: Key) {
-    this.key;
+    this.key = key;
   }
 
   getKey(): Key {
@@ -23,30 +19,27 @@ class Person {
 }
 
 abstract class House {
-  protected door: boolean;
-  protected key: Key;
+  protected door: boolean = false;
   protected tenants: Person[] = [];
 
-  constructor(key: Key) {
-    this.door = false;
-    this.key = key;
+  constructor(protected key: Key) {
   }
 
-  abstract openDoor(key: Key): void;
+  abstract openDoor(person: Person): void;
 
   comeIn(person: Person): void {
     if (this.door) {
       this.tenants.push(person);
-      console.log('Door open');
+      console.log('Двері відчинені');
     } else {
-      console.log('Door closed');
+      console.log('Двері зачинені');
     }
   }
 }
 
 class MyHouse extends House {
-  openDoor(key: Key): void {
-    if (key.getSignature() === this.key.getSignature()) {
+  openDoor(person: Person): void {
+    if (person.getKey().getSignature() === this.key.getSignature()) {
       this.door = true;
       console.log('Door open');
     } else {
@@ -56,12 +49,8 @@ class MyHouse extends House {
 }
 
 const key = new Key();
-
 const house = new MyHouse(key);
 const person = new Person(key);
 
-house.openDoor(person.getKey());
-
+house.openDoor(person);
 house.comeIn(person);
-
-export {};
